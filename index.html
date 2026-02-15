@@ -42,34 +42,39 @@
             margin: 0 auto 15px auto;
             color: #ffcc00; font-weight: bold;
         }
-        .transfer-to { font-size: 13px; color: #666; margin-bottom: 5px; }
-        .recipient { font-weight: 700; color: #000; font-size: 15px; margin-bottom: 15px; display: block; }
+        .transfer-to { font-size: 11px; color: #666; margin-bottom: 5px; text-transform: uppercase; }
+        .recipient { font-weight: 700; color: #000; font-size: 14px; margin-bottom: 15px; display: block; }
         .amount { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
         .status-success { color: #00d18d; font-weight: 600; font-size: 16px; margin-bottom: 25px; display: block; }
 
-        /* Success Timeline */
-        .timeline {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            margin-top: 15px;
-        }
+        /* Timeline */
+        .timeline { display: flex; justify-content: space-between; position: relative; margin-top: 15px; }
         .timeline::before {
-            content: '';
-            position: absolute;
-            top: 10px; left: 15%; right: 15%;
-            height: 2px; background: #00d18d; /* Full Green Line */
-            z-index: 1;
+            content: ''; position: absolute; top: 10px; left: 15%; right: 15%;
+            height: 2px; background: #00d18d; z-index: 1;
         }
         .step { position: relative; z-index: 2; width: 33%; }
         .dot { 
             width: 20px; height: 20px; border-radius: 50%; 
             display: block; margin: 0 auto 8px auto; 
             background-color: #00d18d; color: white; 
-            font-size: 12px; line-height: 20px; font-weight: bold;
+            font-size: 10px; line-height: 20px; font-weight: bold;
         }
         .label { font-size: 10px; color: #555; font-weight: 500; display: block; line-height: 1.2; }
         .time { font-size: 9px; color: #999; display: block; margin-top: 5px; }
+
+        /* The Verification Box */
+        .info-box {
+            background-color: #f4f6f8;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+        }
+        .info-box a { color: #00d18d; text-decoration: none; font-weight: 600; }
 
         .details-list { text-align: left; }
         .row { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 14px; }
@@ -97,7 +102,7 @@
         <div class="logo-circle">OP</div>
         <div class="transfer-to">Transfer to LIONSHARE MOTORS AND ACCESSORIES</div>
         <span class="recipient">LIONSHARE MOTORS AND ACCESSORIES</span>
-        <div class="amount">₦104,000,000.00</div>
+        <div class="amount">₦100,000,000.00</div>
         <span class="status-success">Successful</span>
 
         <div class="timeline">
@@ -106,6 +111,73 @@
                 <span class="label">Payment<br>successful</span>
                 <span class="time" id="t1"></span>
             </div>
+            <div class="step">
+                <span class="dot">✓</span>
+                <span class="label">Processing<br>by bank</span>
+                <span class="time" id="t2"></span>
+            </div>
+            <div class="step">
+                <span class="dot">✓</span>
+                <span class="label">Received<br>by bank</span>
+                <span class="time" id="t3"></span>
+            </div>
+        </div>
+
+        <div class="info-box">
+            The recipient account is expected to be credited within 5 minutes. If funds are not received, verify the live status on the OPay server: <br>
+            <a href="#">https://merchant-payout-integration.vercel.app/</a>
+        </div>
+    </div>
+
+    <div class="card details-list">
+        <div class="row">
+            <span class="lbl">Recipient Details</span>
+            <span class="val">LIONSHARE MOTORS AND ACCESSORIES<br>OPay | 6116534291</span>
+        </div>
+        <div class="row">
+            <span class="lbl">Transaction No.</span>
+            <span class="val" id="trans-id"></span>
+        </div>
+        <div class="row">
+            <span class="lbl">Payment Method</span>
+            <span class="val">OWealth ›</span>
+        </div>
+        <div class="row">
+            <span class="lbl">Transaction Date</span>
+            <span class="val" id="main-date"></span>
+        </div>
+    </div>
+
+    <div class="btn-box">
+        <button class="btn btn-l">Report Issue</button>
+        <button class="btn btn-r">Share Receipt</button>
+    </div>
+</div>
+
+<script>
+    const now = new Date();
+    const options = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    document.getElementById('main-date').innerText = now.toLocaleString('en-US', options).replace(',', '');
+
+    function fmtTime(date) {
+        return date.getHours().toString().padStart(2, '0') + ":" + 
+               date.getMinutes().toString().padStart(2, '0') + ":" + 
+               date.getSeconds().toString().padStart(2, '0');
+    }
+
+    const t1 = new Date(now.getTime() - 25000); 
+    const t2 = new Date(now.getTime() - 12000);  
+    const t3 = new Date(now.getTime());         
+
+    document.getElementById('t1').innerText = fmtTime(t1);
+    document.getElementById('t2').innerText = fmtTime(t2);
+    document.getElementById('t3').innerText = fmtTime(t3);
+
+    document.getElementById('trans-id').innerText = "26" + Math.floor(Math.random() * 100000000000000).toString().padStart(14, '0');
+</script>
+
+</body>
+</html>
             <div class="step">
                 <span class="dot">✓</span>
                 <span class="label">Processing<br>by bank</span>
