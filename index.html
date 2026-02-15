@@ -5,174 +5,174 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transaction Details</title>
     <style>
-        /* Base Setup */
         body {
-            background-color: #f5f5f5; /* Light gray background like real app */
-            margin: 0;
-            padding: 0;
+            background-color: #f8f9fa;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
             display: flex;
             justify-content: center;
         }
-
-        /* Mobile Container: Prevents repeating/scrambling */
-        .app-wrapper {
+        .app-container {
             width: 100%;
-            max-width: 450px; /* Locks width to phone size */
-            background-color: #f5f5f5;
-            min-height: 100vh;
+            max-width: 420px;
             padding: 15px;
             box-sizing: border-box;
         }
-
-        /* Header Navigation */
-        .nav-bar {
+        .header {
             display: flex;
             align-items: center;
-            padding: 10px 0 20px 5px;
+            padding: 10px 0 20px 0;
         }
-        .back-icon { font-size: 24px; margin-right: 15px; cursor: pointer; }
-        .nav-title { font-size: 18px; font-weight: 600; }
+        .back { font-size: 24px; margin-right: 15px; }
+        .title { font-size: 18px; font-weight: 600; }
 
-        /* White Rounded Cards */
         .card {
-            background: #ffffff;
-            border-radius: 15px;
-            padding: 24px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
             margin-bottom: 15px;
             text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-
-        .opay-icon {
-            width: 45px;
-            height: 45px;
-            background: #003366;
+        .logo-circle {
+            width: 48px; height: 48px;
+            background-color: #003366;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 12px auto;
-            color: #ffcc00;
-            font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 15px auto;
+            color: #ffcc00; font-weight: bold;
         }
+        .transfer-to { font-size: 13px; color: #666; margin-bottom: 5px; }
+        .recipient { font-weight: 700; color: #000; font-size: 15px; margin-bottom: 15px; display: block; }
+        .amount { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+        .status-success { color: #00d18d; font-weight: 600; font-size: 16px; margin-bottom: 25px; display: block; }
 
-        .transfer-to { color: #666; font-size: 14px; margin-bottom: 4px; }
-        .recipient-bold { font-weight: 700; font-size: 15px; margin-bottom: 12px; display: block; }
-        .amount-text { font-size: 30px; font-weight: 800; margin-bottom: 8px; }
-        
-        /* Pending Status */
-        .pending-label {
-            color: #ff9800; /* OPay Pending Orange */
-            font-weight: 600;
-            font-size: 16px;
-            display: block;
-            margin-bottom: 25px;
-        }
-
-        /* Timeline Flow */
+        /* Success Timeline */
         .timeline {
             display: flex;
             justify-content: space-between;
             position: relative;
-            margin: 20px 0;
+            margin-top: 15px;
         }
-        .timeline::after {
+        .timeline::before {
             content: '';
             position: absolute;
-            top: 10px;
-            left: 15%;
-            right: 15%;
-            height: 2px;
-            background: #eee;
+            top: 10px; left: 15%; right: 15%;
+            height: 2px; background: #00d18d; /* Full Green Line */
             z-index: 1;
         }
         .step { position: relative; z-index: 2; width: 33%; }
-        .circle { width: 20px; height: 20px; border-radius: 50%; display: block; margin: 0 auto 8px auto; }
-        .circle.green { background: #00d18d; color: white; font-size: 12px; line-height: 20px; text-align: center; }
-        .circle.orange { background: #ff9800; }
-        .circle.gray { background: #eee; }
-        .step-txt { font-size: 10px; color: #999; line-height: 1.3; display: block; }
-
-        /* Detail List */
-        .details-list { text-align: left; padding: 20px; }
-        .row { display: flex; justify-content: space-between; margin-bottom: 18px; font-size: 14px; align-items: flex-start; }
-        .left-label { color: #999; min-width: 100px; }
-        .right-val { color: #333; font-weight: 500; text-align: right; }
-
-        /* Action Buttons */
-        .footer-btns { display: flex; justify-content: space-between; margin-top: 20px; }
-        .btn {
-            width: 48%;
-            padding: 14px;
-            border-radius: 25px;
-            font-weight: 600;
-            border: none;
-            font-size: 15px;
+        .dot { 
+            width: 20px; height: 20px; border-radius: 50%; 
+            display: block; margin: 0 auto 8px auto; 
+            background-color: #00d18d; color: white; 
+            font-size: 12px; line-height: 20px; font-weight: bold;
         }
-        .report { background: #f0fdf4; color: #00d18d; }
-        .share { background: #00d18d; color: white; }
+        .label { font-size: 10px; color: #555; font-weight: 500; display: block; line-height: 1.2; }
+        .time { font-size: 9px; color: #999; display: block; margin-top: 5px; }
+
+        .details-list { text-align: left; }
+        .row { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 14px; }
+        .lbl { color: #888; }
+        .val { color: #222; font-weight: 500; text-align: right; width: 65%; }
+
+        .btn-box { display: flex; justify-content: space-between; margin-top: 10px; }
+        .btn {
+            width: 48%; padding: 13px; border-radius: 25px;
+            font-weight: 600; border: none; font-size: 14px;
+        }
+        .btn-l { background-color: #f0fdf4; color: #00d18d; }
+        .btn-r { background-color: #00d18d; color: white; }
     </style>
 </head>
 <body>
 
-<div class="app-wrapper">
-    <div class="nav-bar">
-        <span class="back-icon">‹</span>
-        <span class="nav-title">Transaction Details</span>
+<div class="app-container">
+    <div class="header">
+        <span class="back">‹</span>
+        <span class="title">Transaction Details</span>
     </div>
 
     <div class="card">
-        <div class="opay-icon">OP</div>
-        <span class="transfer-to">Transfer to LIONSHARE MOTORS AND ACCESSORIES</span>
-        <span class="recipient-bold">LIONSHARE MOTORS AND ACCESSORIES</span>
-        <div class="amount-text">₦104,000,000.00</div>
-        <span class="pending-label">Pending</span>
+        <div class="logo-circle">OP</div>
+        <div class="transfer-to">Transfer to LIONSHARE MOTORS AND ACCESSORIES</div>
+        <span class="recipient">LIONSHARE MOTORS AND ACCESSORIES</span>
+        <div class="amount">₦104,000,000.00</div>
+        <span class="status-success">Successful</span>
 
         <div class="timeline">
             <div class="step">
-                <span class="circle green">✓</span>
-                <span class="step-txt">Payment<br>successful</span>
+                <span class="dot">✓</span>
+                <span class="label">Payment<br>successful</span>
+                <span class="time" id="t1"></span>
             </div>
             <div class="step">
-                <span class="circle orange"></span>
-                <span class="step-txt">Processing<br>by bank</span>
+                <span class="dot">✓</span>
+                <span class="label">Processing<br>by bank</span>
+                <span class="time" id="t2"></span>
             </div>
             <div class="step">
-                <span class="circle gray"></span>
-                <span class="step-txt">Received<br>by bank</span>
+                <span class="dot">✓</span>
+                <span class="label">Received<br>by bank</span>
+                <span class="time" id="t3"></span>
             </div>
         </div>
     </div>
 
     <div class="card details-list">
         <div class="row">
-            <span class="left-label">Recipient Details</span>
-            <span class="right-val">LIONSHARE MOTORS AND ACCESSORIES<br>OPay | 6116534291</span>
+            <span class="lbl">Recipient Details</span>
+            <span class="val">LIONSHARE MOTORS AND ACCESSORIES<br>OPay | 6116534291</span>
         </div>
         <div class="row">
-            <span class="left-label">Transaction No.</span>
-            <span class="right-val" id="t-num"></span>
+            <span class="lbl">Transaction No.</span>
+            <span class="val" id="trans-id"></span>
         </div>
         <div class="row">
-            <span class="left-label">Payment Method</span>
-            <span class="right-val">OWealth ›</span>
+            <span class="lbl">Payment Method</span>
+            <span class="val">OWealth ›</span>
         </div>
         <div class="row">
-            <span class="left-label">Remark</span>
-            <span class="right-val">Cocoa Beans Trade - 20 Tons</span>
-        </div>
-        <div class="row">
-            <span class="left-label">Transaction Date</span>
-            <span class="right-val" id="t-date"></span>
+            <span class="lbl">Transaction Date</span>
+            <span class="val" id="main-date"></span>
         </div>
     </div>
 
-    <div class="footer-btns">
-        <button class="btn report">Report Issue</button>
-        <button class="btn share">Share Receipt</button>
+    <div class="btn-box">
+        <button class="btn btn-l">Report Issue</button>
+        <button class="btn btn-r">Share Receipt</button>
     </div>
 </div>
+
+<script>
+    const now = new Date();
+    
+    // Set Main Date
+    const options = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    document.getElementById('main-date').innerText = now.toLocaleString('en-US', options).replace(',', '');
+
+    // Function to format time HH:mm:ss
+    function fmtTime(date) {
+        return date.getHours().toString().padStart(2, '0') + ":" + 
+               date.getMinutes().toString().padStart(2, '0') + ":" + 
+               date.getSeconds().toString().padStart(2, '0');
+    }
+
+    // Generate sequential times for realism
+    const time1 = new Date(now.getTime() - 15000); // 15 seconds ago
+    const time2 = new Date(now.getTime() - 8000);  // 8 seconds ago
+    const time3 = new Date(now.getTime());         // Current time
+
+    document.getElementById('t1').innerText = fmtTime(time1);
+    document.getElementById('t2').innerText = fmtTime(time2);
+    document.getElementById('t3').innerText = fmtTime(time3);
+
+    // Random 16-digit ID
+    document.getElementById('trans-id').innerText = "26" + Math.floor(Math.random() * 100000000000000).toString().padStart(14, '0');
+</script>
+
+</body>
+</html>
 
 <script>
     // Logic for dynamic dates and transaction IDs
