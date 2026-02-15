@@ -5,280 +5,184 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transaction Details</title>
     <style>
-        /* Mobile App Simulation */
+        /* Base Setup */
         body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f5f5; /* Light gray background like real app */
             margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
             justify-content: center;
-            color: #333;
         }
 
-        .app-container {
+        /* Mobile Container: Prevents repeating/scrambling */
+        .app-wrapper {
             width: 100%;
-            max-width: 400px;
-            background-color: #f8f9fa;
+            max-width: 450px; /* Locks width to phone size */
+            background-color: #f5f5f5;
             min-height: 100vh;
             padding: 15px;
+            box-sizing: border-box;
         }
 
-        /* Top Header Navigation */
-        .app-header {
+        /* Header Navigation */
+        .nav-bar {
             display: flex;
             align-items: center;
-            padding: 10px 0 20px 0;
+            padding: 10px 0 20px 5px;
         }
-        .back-arrow { font-size: 24px; margin-right: 15px; color: #000; cursor: pointer; }
-        .header-title { font-size: 18px; font-weight: 600; }
+        .back-icon { font-size: 24px; margin-right: 15px; cursor: pointer; }
+        .nav-title { font-size: 18px; font-weight: 600; }
 
-        /* White Cards */
+        /* White Rounded Cards */
         .card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 24px;
             margin-bottom: 15px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .opay-logo-circle {
-            width: 50px;
-            height: 50px;
-            background-color: #003366;
+        .opay-icon {
+            width: 45px;
+            height: 45px;
+            background: #003366;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px auto;
-            color: gold;
+            margin: 0 auto 12px auto;
+            color: #ffcc00;
             font-weight: bold;
         }
 
-        .transfer-text { font-size: 14px; color: #555; margin-bottom: 8px; }
-        .recipient-name { font-weight: 700; color: #000; margin-bottom: 15px; }
-        .main-amount { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
+        .transfer-to { color: #666; font-size: 14px; margin-bottom: 4px; }
+        .recipient-bold { font-weight: 700; font-size: 15px; margin-bottom: 12px; display: block; }
+        .amount-text { font-size: 30px; font-weight: 800; margin-bottom: 8px; }
         
-        /* Pending Status Label */
-        .status-text { color: #ff9800; font-weight: 600; font-size: 16px; margin-bottom: 25px; display: block; }
+        /* Pending Status */
+        .pending-label {
+            color: #ff9800; /* OPay Pending Orange */
+            font-weight: 600;
+            font-size: 16px;
+            display: block;
+            margin-bottom: 25px;
+        }
 
-        /* Progress Timeline */
+        /* Timeline Flow */
         .timeline {
             display: flex;
             justify-content: space-between;
             position: relative;
-            margin-top: 20px;
-            padding: 0 10px;
+            margin: 20px 0;
         }
-        .timeline::before {
+        .timeline::after {
             content: '';
             position: absolute;
             top: 10px;
-            left: 10%;
-            right: 10%;
+            left: 15%;
+            right: 15%;
             height: 2px;
             background: #eee;
             z-index: 1;
         }
-        .step { position: relative; z-index: 2; width: 33%; text-align: center; }
-        .dot { width: 20px; height: 20px; border-radius: 50%; display: block; margin: 0 auto 8px auto; }
-        .dot.success { background-color: #00d18d; color: white; font-size: 12px; line-height: 20px; }
-        .dot.pending { background-color: #ff9800; }
-        .dot.empty { background-color: #eee; }
-        .step-label { font-size: 10px; color: #888; display: block; line-height: 1.2; }
+        .step { position: relative; z-index: 2; width: 33%; }
+        .circle { width: 20px; height: 20px; border-radius: 50%; display: block; margin: 0 auto 8px auto; }
+        .circle.green { background: #00d18d; color: white; font-size: 12px; line-height: 20px; text-align: center; }
+        .circle.orange { background: #ff9800; }
+        .circle.gray { background: #eee; }
+        .step-txt { font-size: 10px; color: #999; line-height: 1.3; display: block; }
 
-        /* Details Card */
-        .details-card { text-align: left; }
-        .details-title { font-weight: 700; font-size: 15px; margin-bottom: 20px; }
-        .detail-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; }
-        .label { color: #888; }
-        .value { color: #222; font-weight: 500; text-align: right; width: 60%; }
+        /* Detail List */
+        .details-list { text-align: left; padding: 20px; }
+        .row { display: flex; justify-content: space-between; margin-bottom: 18px; font-size: 14px; align-items: flex-start; }
+        .left-label { color: #999; min-width: 100px; }
+        .right-val { color: #333; font-weight: 500; text-align: right; }
 
-        /* Buttons */
-        .btn-group { display: flex; justify-content: space-between; margin-top: 10px; }
+        /* Action Buttons */
+        .footer-btns { display: flex; justify-content: space-between; margin-top: 20px; }
         .btn {
             width: 48%;
-            padding: 12px;
+            padding: 14px;
             border-radius: 25px;
             font-weight: 600;
             border: none;
-            cursor: pointer;
+            font-size: 15px;
         }
-        .btn-report { background-color: #e8f5e9; color: #00d18d; }
-        .btn-share { background-color: #00d18d; color: white; }
+        .report { background: #f0fdf4; color: #00d18d; }
+        .share { background: #00d18d; color: white; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="app-header">
-        <span class="back-arrow">‹</span>
-        <span class="header-title">Transaction Details</span>
+<div class="app-wrapper">
+    <div class="nav-bar">
+        <span class="back-icon">‹</span>
+        <span class="nav-title">Transaction Details</span>
     </div>
 
     <div class="card">
-        <div class="opay-logo-circle">OP</div>
-        <div class="transfer-text">Transfer to LIONSHARE MOTORS AND ACCESSORIES</div>
-        <div class="main-amount">₦104,000,000.00</div>
-        <span class="status-text">Pending</span>
+        <div class="opay-icon">OP</div>
+        <span class="transfer-to">Transfer to LIONSHARE MOTORS AND ACCESSORIES</span>
+        <span class="recipient-bold">LIONSHARE MOTORS AND ACCESSORIES</span>
+        <div class="amount-text">₦104,000,000.00</div>
+        <span class="pending-label">Pending</span>
 
         <div class="timeline">
             <div class="step">
-                <span class="dot success">✓</span>
-                <span class="step-label">Payment<br>successful</span>
+                <span class="circle green">✓</span>
+                <span class="step-txt">Payment<br>successful</span>
             </div>
             <div class="step">
-                <span class="dot pending"></span>
-                <span class="step-label">Processing<br>by bank</span>
+                <span class="circle orange"></span>
+                <span class="step-txt">Processing<br>by bank</span>
             </div>
             <div class="step">
-                <span class="dot empty"></span>
-                <span class="step-label">Received<br>by bank</span>
+                <span class="circle gray"></span>
+                <span class="step-txt">Received<br>by bank</span>
             </div>
         </div>
     </div>
 
-    <div class="card details-card">
-        <div class="details-title">Transaction Details</div>
-        
-        <div class="detail-row">
-            <span class="label">Recipient Details</span>
-            <span class="value">LIONSHARE MOTORS AND ACCESSORIES<br>OPay | 6116534291</span>
+    <div class="card details-list">
+        <div class="row">
+            <span class="left-label">Recipient Details</span>
+            <span class="right-val">LIONSHARE MOTORS AND ACCESSORIES<br>OPay | 6116534291</span>
         </div>
-        
-        <div class="detail-row">
-            <span class="label">Transaction No.</span>
-            <span class="value" id="trans-no"></span>
+        <div class="row">
+            <span class="left-label">Transaction No.</span>
+            <span class="right-val" id="t-num"></span>
         </div>
-
-        <div class="detail-row">
-            <span class="label">Payment Method</span>
-            <span class="value">OWealth ›</span>
+        <div class="row">
+            <span class="left-label">Payment Method</span>
+            <span class="right-val">OWealth ›</span>
         </div>
-
-        <div class="detail-row">
-            <span class="label">Transaction Date</span>
-            <span class="value" id="trans-date"></span>
+        <div class="row">
+            <span class="left-label">Remark</span>
+            <span class="right-val">Cocoa Beans Trade - 20 Tons</span>
+        </div>
+        <div class="row">
+            <span class="left-label">Transaction Date</span>
+            <span class="right-val" id="t-date"></span>
         </div>
     </div>
 
-    <div class="btn-group">
-        <button class="btn btn-report">Report Issue</button>
-        <button class="btn btn-share">Share Receipt</button>
-    </div>
-</div>
-
-<script>
-    // Auto-generate realistic details
-    const now = new Date();
-    const dateOptions = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    document.getElementById('trans-date').innerText = now.toLocaleString('en-US', dateOptions).replace(',', '');
-
-    // Transaction Number format matching OPay's style
-    const randomID = "26" + Math.floor(1000000000000000 + Math.random() * 9000000000000000);
-    document.getElementById('trans-no').innerText = randomID;
-</script>
-
-</body>
-</html>
-        <div class="logo-area">OPay</div>
-        <div class="amount">₦104,000,000.00</div>
-        <div class="status-pill">PENDING</div>
-        <div id="receipt-date" style="color: #999; font-size: 12px; margin-top: 10px;"></div>
-
-        <div class="details-list">
-            <div class="detail-row">
-                <span class="label">Recipient</span>
-                <span class="value">LIONSHARE MOTORS AND ACCESSORIES</span>
-            </div>
-            <div class="detail-row">
-                <span class="label">Bank/Account</span>
-                <span class="value">OPay | 6116534291</span>
-            </div>
-            <div class="detail-row">
-                <span class="label">Transaction ID</span>
-                <span class="value" id="tid"></span>
-            </div>
-            <div class="detail-row">
-                <span class="label">Remark</span>
-                <span class="value">Cocoa Beans Trade - 20 Tons</span>
-            </div>
-        </div>
-        
-        <div class="footer-note">
-            Generated by OPay Digital Services
-        </div>
+    <div class="footer-btns">
+        <button class="btn report">Report Issue</button>
+        <button class="btn share">Share Receipt</button>
     </div>
 </div>
 
 <script>
-    // Live Clock for Status Bar and Receipt
-    function updateClock() {
-        const now = new Date();
-        const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-        document.getElementById('phone-time').innerText = timeStr;
-        
-        const dateOptions = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-        document.getElementById('receipt-date').innerText = now.toLocaleString('en-US', dateOptions);
-    }
-
-    // Dynamic ID Generation
-    const randomID = "24" + Math.floor(Math.random() * 1e16);
-    document.getElementById('tid').innerText = randomID;
-
-    updateClock();
+    // Logic for dynamic dates and transaction IDs
+    const d = new Date();
+    const options = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    document.getElementById('t-date').innerText = d.toLocaleString('en-US', options).replace(',', '');
+    
+    // Generates a 16-digit OPay style transaction ID
+    document.getElementById('t-num').innerText = "26" + Math.floor(10000000000000 + Math.random() * 90000000000000);
 </script>
 
 </body>
 </html>
-        <div class="logo-area">OPay</div>
-        <div class="amount">₦104,000,000.00</div>
-        <div class="status-pill">PENDING</div>
-        <div id="receipt-date" style="color: #999; font-size: 12px; margin-top: 10px;"></div>
-
-        <div class="details-list">
-            <div class="detail-row">
-                <span class="label">Recipient</span>
-                <span class="value">LIONSHARE MOTORS AND ACCESSORIES</span>
-            </div>
-            <div class="detail-row">
-                <span class="label">Bank/Account</span>
-                <span class="value">OPay | 6116534291</span>
-            </div>
-            <div class="detail-row">
-                <span class="label">Transaction ID</span>
-                <span class="value" id="tid"></span>
-            </div>
-            <div class="detail-row">
-                <span class="label">Remark</span>
-                <span class="value">Cocoa Beans Trade - 20 Tons</span>
-            </div>
-        </div>
-        
-        <div class="footer-note">
-            Generated by OPay Digital Services
-        </div>
-    </div>
-</div>
-
-<script>
-    // Live Clock for Status Bar
-    function updateClock() {
-        const now = new Date();
-        const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-        document.getElementById('phone-time').innerText = timeStr;
-        
-        const dateOptions = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-        document.getElementById('receipt-date').innerText = now.toLocaleString('en-US', dateOptions);
-    }
-
-    // Dynamic ID
-    const randomID = "24" + Math.floor(Math.random() * 1e16);
-    document.getElementById('tid').innerText = randomID;
-
-    updateClock();
-</script>
-
-</body>
-</html>
-
